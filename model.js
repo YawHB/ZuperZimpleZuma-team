@@ -1,80 +1,122 @@
-import SimpleLinkedList from "./simplelinkedlist.js";
+import SimpleLinkedList from './simplelinkedlist.js';
 
-export {init}
+export const list = new SimpleLinkedList();
 
-const list = new SimpleLinkedList();
-
-function init() {
-  console.log("Model init");
-
+export function init() {
+    console.log('Model init');
+    loadCannon();
 }
 
-function dump() {
-  let node = list.head;
-  let output = "";
-  while(node != null) {
-    output += '"' + node.data + node.id +'"';
-    output += " -> ";
-   
-    node = node.next;
-  }
-  output += "null";
-  console.log(output);
+export function dump() {
+    let node = list.head;
+    let output = '';
+    while (node != null) {
+        output += '"' + node.data + node.id + '"';
+        output += ' -> ';
+
+        node = node.next;
+    }
+    output += 'null';
+    console.log(output);
 }
 
 // **** WRAPPERS ****
-function addRandomBall() {
-  // TODO: Implement
+export function addRandomBall() {
+    const ball = randomBall();
+    const newBallNode = list.add(ball); // Ensure this returns the actual node
+    console.log('Added new ball node:', newBallNode); // Debugging statement
+    return newBallNode; // Return the exact ball node reference
 }
 
 function addBall(ball) {
-  // TODO: Implement
+    list.add(ball);
+    return ball;
 }
 
 // TODO: Implement more functions
+export function insertBallAfter(data, node) {
+    return list.insertAfter(data, node);
+}
+
+export function getFirstBall() {
+    return list.head;
+}
+
+export function getNextBall(ball) {
+    return ball.next;
+}
 
 function numberOfBalls() {
-  // TODO: Implement
+    return list.size();
 }
 
 // **** CANNON ****
 let cannonBall;
 
-function loadCannon() {
-  cannonBall = randomBall();
+export function loadCannon() {
+    cannonBall = randomBall();
 }
 
-function getCannonBall() {
-  return cannonBall;
+export function getCannonBall() {
+    return cannonBall;
 }
 
 // **** MATCHES ****
 
-// TODO: Implement functions to find and remove matches
+export function checkMatches(node) {
+    let current = node;
+    let before = [];
+    let after = [];
 
+    // check left by going backwards in the list from the current node
+    if (current.prev) {
+        current = node.prev; // skip the current
+        while (current != null && current.data == node.data) {
+            before.push(current);
+            current = current.prev;
+        }
+    }
+
+    // check right by going forwards in the list from the current node
+    if (node.next) {
+        current = node.next; // skip the current
+        while (current != null && current.data == node.data) {
+            after.push(current);
+            current = current.next;
+        }
+    }
+
+    return [...before, node, ...after];
+}
+
+export function removeMatches(matches) {
+    for (const match of matches) {
+        list.remove(match);
+    }
+}
 
 // **** BALLS ****
 
-const balls = ["🔴", "🔵","🟡","🟢"];
+const balls = ['🔴', '🔵', '🟡', '🟢'];
 
 function randomBall() {
-  return balls[Math.floor(Math.random()*balls.length)];
+    return balls[Math.floor(Math.random() * balls.length)];
 }
 
 function red() {
-  return balls[0];
+    return balls[0];
 }
 
 function blue() {
-  return balls[1];
+    return balls[1];
 }
 
 function yellow() {
-  return balls[2];
+    return balls[2];
 }
 
 function green() {
-  return balls[3];
+    return balls[3];
 }
 
-debugger;
+// debugger;
